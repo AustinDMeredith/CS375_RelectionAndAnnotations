@@ -6,8 +6,6 @@ In this assignment, you will implement a custom Java annotation and use **reflec
 
 This mirrors a real-world pattern. Sometimes you want to verify internal state in a test without exposing it in your public API.
 
-Clone this repo and push your solution another repo you made. (please don't push to mine)
-
 ---
 
 ## Background
@@ -20,12 +18,12 @@ You will be working with a James class, a professor with a knapsack; a love for 
 
 ## Your Task
 
-### Step 1 — Create the `@ExposeForTesting` Annotation
+### Step 1 — Finish the `@ExposeForTesting` Annotation
 
-Create a file `ExposeForTesting.java` in `src/main/java/com/example/`. This annotation should:
+Add the meta-annotations to `ExposeForTesting.java` such that:
 
-- Be applicable to **methods** only (`@Target`)
-- Be available at **runtime** (`@Retention`) so reflection can detect it
+- It is only applicable to **methods** only (`@Target`)
+- It retains during **runtime** (`@Retention`) so reflection can detect it
 
 ### Step 2 — Annotate `getKnapsack()` in `James`
 
@@ -81,6 +79,12 @@ src/
 - `TestHarness` must **reject** unannotated private methods with an exception
 - Any warnings should should be suppressed with @SuppressWarnings("unchecked")
 - All four tests in `JamesTest` must pass via `mvn test`
+
+---
+
+## Submission
+
+- Submit a screenshot of `mvn test` passing along with a zip file containing the updated code.
 
 ---
 
