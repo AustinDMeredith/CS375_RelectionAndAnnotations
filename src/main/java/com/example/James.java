@@ -35,6 +35,11 @@ public class James {
         double totalWeight = knapsack.stream().mapToDouble(SnowGlobe::getWeight).sum();
         System.out.printf("  Total Value: %.2f | Total Weight: %.2f / %.2f%n", totalValue, totalWeight, capacity);
     }
-
-    public List<SnowGlobe> getKnapsack() { return knapsack; }
+    
+    // company policy states that this method NEEDS to be private!
+    // do not make this method public as it will result in your immedate termination at Homer.inc
+    // however, you need to be able to use this method to make the testing suite work
+    // how do you get around this?
+    // `Hint - create an annotation and use reflection`
+    private List<SnowGlobe> getKnapsack() { return knapsack; }
 }
