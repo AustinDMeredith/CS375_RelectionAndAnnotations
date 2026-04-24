@@ -35,20 +35,38 @@ private List<SnowGlobe> getKnapsack() { return knapsack; }
 
 Apply your `@ExposeForTesting` annotation to it. **Do not change its visibility.**
 
-### Step 3 — Create the `TestHarness` Utility
-
-Add Functionality to the `TestHarness.java` class with a static method:
-
+### Step 3 — Use Reflection to Alter Visibility for Annotated Methods
+ 
+You can do this one of two ways:
+ 
+---
+ 
+#### Method 1 — Add a static invoke method to `TestHarness.java`
+ 
 ```java
-public static <T> T invoke(Object target, String methodName, Class<T> returnType)
+public static <T> T invoke(Object target, String methodName, Class<T> returnType) {
+    // your code here
+}
 ```
-
+ 
 This method should:
-
 1. Use reflection to find the named method on the target object
-2. Check that it is annotated with `@ExposeForTesting`. If not, throw an `IllegalAccessException`
+2. Check that it is annotated with `@ExposeForTesting` — if not, throw an `IllegalAccessException`
 3. Set the method accessible via reflection
 4. Invoke it and return the result cast to `returnType`
+---
+ 
+#### Method 2 — Loop through methods and expose annotated ones *(probably better for this scenario)*
+ 
+Loop through all methods on the target class and call `setAccessible(true)` on any method annotated with `@ExposeForTesting`:
+
+Do this in the JamesTest class
+ 
+```java
+for (Method method : target.getClass().getDeclaredMethods()) {
+    // your code here
+}
+```
 
 ### Step 4 — Use `TestHarness` in Your Tests
 
@@ -67,7 +85,7 @@ src/
 │   └── Main.java
 └── test/java/com/example/
     ├── JamesTest.java          ← you update this
-    └── TestHarness.java        ← you complete this
+    └── TestHarness.java        ← you complete this (if you want to do method one)
 ```
 
 ---
@@ -76,7 +94,7 @@ src/
 
 - `getKnapsack()` in `James` must remain **private**
 - `@ExposeForTesting` must retain during runtime and only target methods
-- `TestHarness` must **reject** unannotated private methods with an exception
+- Your reflection code must not alter visibility for unannotated methods
 - Any warnings should should be suppressed with @SuppressWarnings("unchecked")
 - All four tests in `JamesTest` must pass via `mvn test`
 
@@ -90,7 +108,8 @@ src/
 
 ## Hints
 
-- `Class.getDeclaredMethod(String name)` finds methods regardless of visibility
+- `Class.getDeclaredMethod(String name)` finds method given the method name, regardless of visibility
+- `Class.getDeclaredMethods()` finds all methods, regardless of visibility
 - `method.setAccessible(true)` bypasses the private modifier at runtime
 - `method.isAnnotationPresent(ExposeForTesting.class)` checks for your annotation
 - `method.invoke(targetClass)` calls the method on the given object instance. For methods with no parameters, no additional arguments are needed
